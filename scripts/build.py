@@ -2,7 +2,7 @@
 """Build the static site: inline the validated data into one HTML page.
 
 Run: python3 scripts/validate.py && python3 scripts/build.py
-Output: dist/index.html (self-contained; deploy to GitHub Pages or publish as an artifact)
+Output: docs/index.html (served by GitHub Pages) (self-contained; deploy to GitHub Pages or publish as an artifact)
 """
 import json
 from pathlib import Path
@@ -14,6 +14,6 @@ data = {
 }
 template = (ROOT / "site/index.html").read_text()
 html = template.replace("/*__DATA__*/null", json.dumps(data))
-(ROOT / "dist").mkdir(exist_ok=True)
-(ROOT / "dist/index.html").write_text(html)
-print(f"Built dist/index.html ({len(html):,} bytes)")
+(ROOT / "docs").mkdir(exist_ok=True)
+(ROOT / "docs/index.html").write_text(html)
+print(f"Built docs/index.html ({len(html):,} bytes)")

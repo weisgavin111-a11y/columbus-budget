@@ -12,7 +12,7 @@ A neutral, plain-English explainer of City of Columbus finances, built from the 
 ## Layout
 - `data/<year>/*.json` — extracted, validated datasets (one per source document)
 - `scripts/validate.py` — tie-out checks; exits non-zero on failure
-- `scripts/build.py` — inlines data into `site/index.html` → `dist/index.html`
+- `scripts/build.py` — inlines data into `site/index.html` → `docs/index.html` (GitHub Pages serves this folder)
 - `site/` — page templates (plain HTML/CSS/JS, no framework)
 - `.claude/skills/` — how Claude extracts reports and writes explainers
 - `.claude/commands/` — slash commands for the recurring workflows

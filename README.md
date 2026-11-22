@@ -5,9 +5,9 @@ Plain-English explainers and charts of City of Columbus finances, built from the
 ## Quick start
 ```bash
 python3 scripts/validate.py   # tie out every dataset
-python3 scripts/build.py      # writes dist/index.html
+python3 scripts/build.py      # writes docs/index.html
 ```
-Open `dist/index.html` in a browser. Deploy `dist/` to GitHub Pages.
+Open `docs/index.html` in a browser. GitHub Pages serves the `docs/` folder from `main`, so commit the rebuilt page and push.
 
 ## How Claude runs this project
 
