@@ -1,0 +1,479 @@
+{
+  "kind": "budget_comparison",
+  "entity": "City of Columbus, Ohio",
+  "fund": "General Fund",
+  "fiscal_year": 2027,
+  "status": "Proposed by the mayor on November 12, 2026. City Council holds public hearings and can amend it before adoption.",
+  "basis": "Budgetary basis, as presented in the proposed operating budget book.",
+  "columns": [
+    "2025 actual",
+    "2026 projected",
+    "2027 proposed"
+  ],
+  "source": {
+    "title": "2027 Proposed Operating Budget: General Fund Summary (section 006)",
+    "publisher": "City of Columbus Department of Finance and Management",
+    "url": "https://www.columbus.gov/files/sharedassets/city/v/1/finance/budget/2027/006-2027.pdf",
+    "retrieved": "2026-11-22"
+  },
+  "outlook_source": {
+    "title": "2027 Proposed Operating Budget: Financial Overview (section 009)",
+    "url": "https://www.columbus.gov/files/sharedassets/city/v/1/finance/budget/2027/009-2027.pdf"
+  },
+  "revenue": [
+    {
+      "group": "Taxes",
+      "name": "Income tax",
+      "values": [
+        918192027,
+        950533000,
+        981425000
+      ]
+    },
+    {
+      "group": "Taxes",
+      "name": "Property tax",
+      "values": [
+        84751854,
+        86394000,
+        93065000
+      ]
+    },
+    {
+      "group": "Taxes",
+      "name": "Electricity (KWH) tax",
+      "values": [
+        3783034,
+        3750000,
+        3750000
+      ]
+    },
+    {
+      "group": "Shared revenue",
+      "name": "State local government fund",
+      "values": [
+        27698230,
+        28323000,
+        29231000
+      ]
+    },
+    {
+      "group": "Shared revenue",
+      "name": "Casino tax",
+      "values": [
+        9067486,
+        9000000,
+        9000000
+      ]
+    },
+    {
+      "group": "Shared revenue",
+      "name": "Liquor permits and other",
+      "values": [
+        1726994,
+        1500000,
+        1500000
+      ]
+    },
+    {
+      "group": "Other",
+      "name": "Charges for service",
+      "values": [
+        81211411,
+        91699000,
+        97431000
+      ]
+    },
+    {
+      "group": "Other",
+      "name": "Investment earnings",
+      "values": [
+        51952045,
+        52700000,
+        42900000
+      ]
+    },
+    {
+      "group": "Other",
+      "name": "Fines and penalties",
+      "values": [
+        10743792,
+        10400000,
+        10920000
+      ]
+    },
+    {
+      "group": "Other",
+      "name": "Licenses and permits",
+      "values": [
+        5769100,
+        5350000,
+        4450000
+      ]
+    },
+    {
+      "group": "Other",
+      "name": "All other",
+      "values": [
+        3132968,
+        10250000,
+        3831857
+      ]
+    }
+  ],
+  "revenue_total": [
+    1198028941,
+    1249899000,
+    1277503857
+  ],
+  "other_resources": [
+    {
+      "name": "Encumbrance cancellations",
+      "values": [
+        21814891,
+        7300000,
+        5000000
+      ]
+    },
+    {
+      "name": "Unspent balance carried in",
+      "values": [
+        15235263,
+        25540366,
+        21246143
+      ]
+    },
+    {
+      "name": "Transfers in",
+      "values": [
+        21235135,
+        1516883,
+        1000000
+      ]
+    }
+  ],
+  "resources_total": [
+    1256314229,
+    1284256249,
+    1304750000
+  ],
+  "departments": [
+    {
+      "name": "Public Safety",
+      "values": [
+        826514610,
+        865548631,
+        892784250
+      ]
+    },
+    {
+      "name": "Recreation and Parks",
+      "values": [
+        59084346,
+        63212414,
+        63440541
+      ]
+    },
+    {
+      "name": "Public Service",
+      "values": [
+        37172097,
+        30643540,
+        49914984
+      ]
+    },
+    {
+      "name": "Citywide Technology",
+      "values": [
+        28065431,
+        36972382,
+        36396661
+      ]
+    },
+    {
+      "name": "Finance and Management",
+      "values": [
+        34313919,
+        35684587,
+        35533514
+      ]
+    },
+    {
+      "name": "Finance citywide accounts",
+      "values": [
+        13794179,
+        8142237,
+        32850000
+      ]
+    },
+    {
+      "name": "Health",
+      "values": [
+        33289251,
+        28800210,
+        31883223
+      ]
+    },
+    {
+      "name": "Municipal Court Judges",
+      "values": [
+        30089288,
+        31467731,
+        31371453
+      ]
+    },
+    {
+      "name": "Office of the Mayor",
+      "values": [
+        30235239,
+        29147554,
+        22254314
+      ]
+    },
+    {
+      "name": "City Auditor",
+      "values": [
+        18930006,
+        19923631,
+        20291589
+      ]
+    },
+    {
+      "name": "City Attorney",
+      "values": [
+        18719716,
+        19537754,
+        19831220
+      ]
+    },
+    {
+      "name": "Municipal Court Clerk",
+      "values": [
+        19347393,
+        18903753,
+        19219036
+      ]
+    },
+    {
+      "name": "Development",
+      "values": [
+        36216672,
+        38523483,
+        17643750
+      ]
+    },
+    {
+      "name": "Neighborhoods",
+      "values": [
+        14590633,
+        10333674,
+        8456532
+      ]
+    },
+    {
+      "name": "City Council",
+      "values": [
+        7754293,
+        8034789,
+        7780735
+      ]
+    },
+    {
+      "name": "Civil Service Commission",
+      "values": [
+        6110280,
+        6302337,
+        6515563
+      ]
+    },
+    {
+      "name": "Human Resources",
+      "values": [
+        3803603,
+        3755653,
+        4365176
+      ]
+    },
+    {
+      "name": "Inspector General",
+      "values": [
+        2227910,
+        2288273,
+        2248089
+      ]
+    },
+    {
+      "name": "City Treasurer",
+      "values": [
+        1593872,
+        1864299,
+        1969370
+      ]
+    },
+    {
+      "name": "Building and Zoning Services",
+      "values": [
+        9324430,
+        3923174,
+        0
+      ]
+    }
+  ],
+  "spending_total": [
+    1231177165,
+    1263010106,
+    1304750000
+  ],
+  "spending_by_object_2027": [
+    {
+      "name": "Personnel",
+      "amount": 988407504
+    },
+    {
+      "name": "Services and contracts",
+      "amount": 164447462
+    },
+    {
+      "name": "Transfers to other funds",
+      "amount": 128716264
+    },
+    {
+      "name": "Supplies and materials",
+      "amount": 20321546
+    },
+    {
+      "name": "Other",
+      "amount": 2787224
+    },
+    {
+      "name": "Capital outlay",
+      "amount": 70000
+    }
+  ],
+  "reserves": {
+    "economic_stabilization_fund": {
+      "values": [
+        106587927,
+        110863888,
+        114913888
+      ]
+    },
+    "anticipated_expenditures_fund": {
+      "values": [
+        14509058,
+        17509058,
+        21709058
+      ]
+    },
+    "esf_deposit_2027": 1050000,
+    "esf_no_deposits": [
+      2025,
+      2026
+    ],
+    "goal_current": {
+      "amount": 114400000,
+      "by": "end of 2027"
+    },
+    "goal_new": {
+      "amount": 140000000,
+      "by": "end of 2032"
+    },
+    "esf_history": {
+      "note": "Year-end balance in thousands of dollars; 2026 and 2027 are projections.",
+      "source_url": "https://www.columbus.gov/files/sharedassets/city/v/1/finance/budget/2027/009-2027.pdf",
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026,
+        2027
+      ],
+      "balance_thousands": [
+        64075,
+        66741,
+        69522,
+        73946,
+        76180,
+        80655,
+        85158,
+        87880,
+        90777,
+        96628,
+        102800,
+        106588,
+        110864,
+        114914
+      ]
+    }
+  },
+  "forecast": {
+    "note": "The city's own 10-year projection. Gaps must be closed with spending cuts or new revenue because state law does not allow year-end deficits. Revenue estimates for 2028 and later are the Department of Finance and Management's, not the City Auditor's.",
+    "assumptions": [
+      "Income tax grows 3.5% a year from 2028",
+      "Insurance costs grow 7.5% a year from 2028"
+    ],
+    "years": [
+      2027,
+      2028,
+      2029,
+      2030,
+      2031,
+      2032,
+      2033,
+      2034,
+      2035,
+      2036
+    ],
+    "revenue": [
+      1283503857,
+      1325672176,
+      1370290977,
+      1417694509,
+      1464623525,
+      1513166402,
+      1565476608,
+      1617460624,
+      1671234947,
+      1729130089
+    ],
+    "spending": [
+      1303700000,
+      1357447805,
+      1398617269,
+      1441354911,
+      1485747952,
+      1531889550,
+      1579879228,
+      1629823341,
+      1681835576,
+      1736037488
+    ],
+    "gap": [
+      0,
+      -31775630,
+      -28326292,
+      -23660402,
+      -21124427,
+      -18723148,
+      -14402620,
+      -12362717,
+      -10600629,
+      -6907399
+    ]
+  },
+  "known_differences": [
+    "This budget book reports 2025 beginning cash of $15,235,263; the FY25 year-end review reports $15,535,263, a $300,000 difference.",
+    "This budget book reports 2025 encumbrance cancellations of $21,814,891; the year-end review reports $21,921,578, a $106,687 difference.",
+    "2025 department lines sum $3 above the reported total (rounding).",
+    "The City Auditor's letter puts 2027 resources at $1,303,750,000; the General Fund Summary shows $1,304,750,000. The $1,000,000 difference matches the transfer-in line, which the Auditor's statement leaves out."
+  ]
+}

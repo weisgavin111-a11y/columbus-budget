@@ -1,0 +1,78 @@
+{
+  "entity": "City of Columbus, Ohio",
+  "fund": "General Fund",
+  "fiscal_year": 2025,
+  "basis": "Budgetary (cash/encumbrance) basis, as reported by the Department of Finance and Management. Not GAAP; GAAP figures come from the ACFR.",
+  "source": {
+    "title": "FY25 Year-End Financial Review",
+    "publisher": "City of Columbus Department of Finance and Management",
+    "url": "https://www.columbus.gov/files/sharedassets/city/v/1/finance/document-library/year-end-reviews/fy25-year-end-financial-review.pdf",
+    "retrieved": "2026-11-22"
+  },
+  "resources": {
+    "beginning_unencumbered_cash": 15535263,
+    "encumbrance_cancellations": 21921578,
+    "transfers_in": 21235135,
+    "revenue_total": 1198028940,
+    "total": 1256720916
+  },
+  "revenue": [
+    {"group": "Taxes", "name": "Income tax", "amount": 918192027},
+    {"group": "Taxes", "name": "Property tax", "amount": 84751854},
+    {"group": "Taxes", "name": "Electricity (KWH) tax", "amount": 3783034},
+    {"group": "Shared revenue", "name": "State local government fund", "amount": 27698230},
+    {"group": "Shared revenue", "name": "Casino tax", "amount": 9067486},
+    {"group": "Shared revenue", "name": "Liquor permits", "amount": 1653516},
+    {"group": "Shared revenue", "name": "Cigarette tax and other", "amount": 73478},
+    {"group": "Other", "name": "Charges for service", "amount": 81211411},
+    {"group": "Other", "name": "Investment earnings", "amount": 51952045},
+    {"group": "Other", "name": "Fines and penalties", "amount": 10743792},
+    {"group": "Other", "name": "Licenses and permits", "amount": 5769100},
+    {"group": "Other", "name": "All other", "amount": 3132968}
+  ],
+  "expenditures_by_department": [
+    {"name": "Public Safety (police, fire, support)", "amount": 826514610},
+    {"name": "Finance and Management", "amount": 76173529},
+    {"name": "Recreation and Parks", "amount": 59084346},
+    {"name": "Public Service", "amount": 37172097},
+    {"name": "Development", "amount": 36216672},
+    {"name": "Health", "amount": 33289251},
+    {"name": "Office of the Mayor", "amount": 30235239},
+    {"name": "Municipal Court Judges", "amount": 30089288},
+    {"name": "Municipal Court Clerk", "amount": 19347393},
+    {"name": "City Auditor", "amount": 18930006},
+    {"name": "City Attorney", "amount": 18719716},
+    {"name": "Neighborhoods", "amount": 14590633},
+    {"name": "Building and Zoning", "amount": 9324430},
+    {"name": "City Council", "amount": 7754293},
+    {"name": "Civil Service Commission", "amount": 6110280},
+    {"name": "Human Resources", "amount": 3803603},
+    {"name": "Inspector General", "amount": 2227910},
+    {"name": "City Treasurer", "amount": 1593872}
+  ],
+  "expenditures_total": 1231177165,
+  "expenditures_by_object": [
+    {"name": "Personnel (salaries, benefits, pensions)", "amount": 928109996},
+    {"name": "Services and contracts", "amount": 146927686},
+    {"name": "Transfers to other funds", "amount": 106802780},
+    {"name": "Other", "amount": 32873949},
+    {"name": "Supplies and materials", "amount": 16268943},
+    {"name": "Capital outlay", "amount": 193811}
+  ],
+  "ending_fund_balance": 25540366,
+  "reserves": {
+    "economic_stabilization_fund": {"beginning": 102800213, "additions": 3787714, "ending": 106587927},
+    "basic_city_services_fund": {"spent_2025": 19669492, "ending": 0},
+    "anticipated_expenditures_fund": {"ending": 14509058},
+    "rainy_day_goal": {
+      "amount": 114400000,
+      "by": "end of 2027",
+      "description": "10 percent of the 2023 general fund budget of $1.144 billion",
+      "source_url": "https://www.columbus.gov/files/sharedassets/city/v/1/finance/budget/2026/009-2026.pdf"
+    }
+  },
+  "known_differences": [
+    "Revenue lines sum to $1 more than the reported total, and department lines sum to $3 more; the source rounds each line.",
+    "Total resources minus total expenditures is $25,543,751, while the reported ending balance is $25,540,366. The $3,385 gap is not explained in the summary tables; open item for the next extraction pass."
+  ]
+}

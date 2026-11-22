@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Columbus Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+/* Concept: an accountant's columnar pad. Pale green paper, green column rules,
+   figures right-aligned in columns, totals double-underlined, and the auditor's
+   red-pencil tickmarks showing which totals were footed. Left-aligned, one column. */
+:root {
+  --paper: #edf2ea;
+  --sheet: #f6f9f3;
+  --rule: #bcd1bf;
+  --rule-strong: #7fa487;
+  --ink: #1e2b23;
+  --muted: #56655b;
+  --data: #2e6a4b;
+  --data-2: #8fb59a;
+  --data-3: #c9dccb;
+  --pencil: #b8352b;
+  --font: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --hand: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #141b17; --sheet: #19221c; --rule: #2d3d32; --rule-strong: #4d6b55;
+    --ink: #e4ece5; --muted: #9db0a2; --data: #7fc39b; --data-2: #4d7d5f; --data-3: #2f4a39;
+    --pencil: #ef7a6c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #141b17; --sheet: #19221c; --rule: #2d3d32; --rule-strong: #4d6b55;
+  --ink: #e4ece5; --muted: #9db0a2; --data: #7fc39b; --data-2: #4d7d5f; --data-3: #2f4a39;
+  --pencil: #ef7a6c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 var(--font); font-variant-numeric: tabular-nums; }
+.page { max-width: 820px; margin: 0 auto; padding: 0 20px 64px; }
+
+.masthead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 28px 0 18px; border-bottom: 3px double var(--rule-strong); }
+.wordmark { font-weight: 800; font-size: 1.35rem; letter-spacing: -0.01em; margin: 0; }
+.wordmark small { display: block; font-weight: 400; font-size: .85rem; color: var(--muted); letter-spacing: 0; }
+nav.reports { display: flex; gap: 4px; }
+nav.reports a { color: var(--muted); text-decoration: none; font-weight: 500; font-size: .95rem; padding: 6px 12px; border: 1px solid transparent; border-radius: 3px; }
+nav.reports a:hover { color: var(--ink); }
+nav.reports a[aria-current="page"] { color: var(--ink); border-color: var(--rule-strong); background: var(--sheet); }
+a { color: var(--data); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--pencil); outline-offset: 2px; }
+
+.view[hidden] { display: none; }
+.intro { padding: 40px 0 8px; }
+h1 { font-size: clamp(2rem, 5vw, 2.9rem); line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px; text-wrap: balance; max-width: 18ch; }
+.lede { font-size: 1.12rem; max-width: 62ch; margin: 0 0 18px; }
+.status { display: inline-flex; gap: 8px; align-items: baseline; font-size: .9rem; color: var(--muted); border-left: 3px solid var(--pencil); padding-left: 10px; max-width: 62ch; }
+
+section.q { padding: 36px 0 8px; border-top: 1px solid var(--rule); margin-top: 32px; }
+h2 { font-size: 1.45rem; line-height: 1.2; font-weight: 700; margin: 0 0 8px; text-wrap: balance; letter-spacing: -0.01em; }
+.answer { font-size: 1.12rem; max-width: 62ch; margin: 0 0 20px; }
+.answer b { font-weight: 800; }
+.note { color: var(--muted); font-size: .95rem; max-width: 64ch; }
+
+/* Ledger tables: the columnar pad */
+.ledger-wrap { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); }
+table.ledger { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .95rem; }
+.ledger th, .ledger td { padding: 7px 12px; border-bottom: 1px solid var(--rule); }
+.ledger td + td, .ledger th + th { border-left: 1px solid var(--rule); }
+.ledger td.num, .ledger th.num { text-align: right; white-space: nowrap; }
+.ledger thead th { font-weight: 700; font-size: .85rem; color: var(--muted); text-align: left; vertical-align: bottom; border-bottom: 2px solid var(--rule-strong); }
+.ledger tr.group td { font-weight: 700; color: var(--muted); font-size: .85rem; background: transparent; padding-top: 14px; }
+.ledger tr.total td { font-weight: 800; border-bottom: 3px double var(--ink); }
+.ledger tr.sub td { font-weight: 700; }
+.ledger td.focus { background: color-mix(in srgb, var(--data-3) 45%, transparent); }
+.ledger .chg { color: var(--muted); }
+.tick { font-family: var(--hand); color: var(--pencil); font-size: 1.25rem; line-height: 0; margin-left: 4px; vertical-align: -1px; }
+
+/* Bars and charts */
+.split { display: flex; height: 34px; margin: 4px 0 8px; border: 1px solid var(--rule-strong); }
+.split div { height: 100%; border-right: 2px solid var(--sheet); }
+.split div:last-child { border-right: 0; }
+.split-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .9rem; margin-bottom: 18px; }
+.split-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; background: var(--c); vertical-align: 0; }
+.chart { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--muted); font: 12px var(--font); }
+.chart .lbl { fill: var(--ink); font-weight: 700; }
+.chart .pencil { fill: var(--pencil); font: 600 17px var(--hand); }
+.chart-frame { background: var(--sheet); border: 1px solid var(--rule); padding: 14px 10px 6px; }
+
+button.more { margin-top: 10px; background: none; border: 1px solid var(--rule-strong); color: var(--ink); font: 500 .9rem var(--font); padding: 6px 12px; border-radius: 3px; cursor: pointer; }
+button.more:hover { background: var(--sheet); }
+
+dl.terms { display: grid; grid-template-columns: max-content 1fr; gap: 10px 20px; margin: 0; max-width: 70ch; }
+dl.terms dt { font-weight: 700; }
+dl.terms dd { margin: 0; color: var(--muted); }
+
+ul.ticks { list-style: none; padding: 0; margin: 0; max-width: 70ch; }
+ul.ticks li { display: grid; grid-template-columns: 32px 1fr; gap: 6px; padding: 8px 0; border-bottom: 1px dotted var(--rule-strong); }
+ul.ticks .mark { font-family: var(--hand); color: var(--pencil); font-size: 1.5rem; line-height: 1.1; }
+.legend-note { font-size: .9rem; color: var(--muted); margin-top: 10px; }
+
+footer { border-top: 3px double var(--rule-strong); margin-top: 48px; padding-top: 18px; color: var(--muted); font-size: .9rem; }
+footer p { max-width: 70ch; }
+
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  dl.terms { grid-template-columns: 1fr; gap: 2px 0; }
+  dl.terms dd { margin-bottom: 10px; }
+  /* On phones, drop the 2025 column from three-year tables so 2027 stays in view */
+  .three table.ledger { min-width: 0; font-size: .88rem; }
+  .three .ledger td:nth-child(2), .three .ledger th:nth-child(2) { display: none; }
+  .ledger th, .ledger td { padding: 6px 7px; }
+  .three .ledger td:first-child { min-width: 7.5em; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .split div { transition: flex-grow .3s ease; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <p class="wordmark">Columbus Ledger<small>City finances in plain English, from the city's own reports</small></p>
+    <nav class="reports" aria-label="Reports">
+      <a href="#budget-2027" id="nav-2027">2027 proposed budget</a>
+      <a href="#results-2025" id="nav-2025">2025 results</a>
+    </nav>
+  </header>
+
+  <!-- ===================== 2027 PROPOSED BUDGET ===================== -->
+  <main class="view" id="view-2027">
+    <div class="intro">
+      <h1>What's in the mayor's 2027 budget proposal</h1>
+      <p class="lede" id="p27-lede"></p>
+      <p class="status" id="p27-status"></p>
+    </div>
+
+    <section class="q">
+      <h2>How much more would the city spend?</h2>
+      <p class="answer" id="p27-size"></p>
+      <div class="ledger-wrap three"><table class="ledger" id="p27-totals"></table></div>
+    </section>
+
+    <section class="q">
+      <h2>Where would the money come from?</h2>
+      <p class="answer" id="p27-rev-answer"></p>
+      <div class="ledger-wrap three"><table class="ledger" id="p27-rev"></table></div>
+      <p class="note" id="p27-rev-note"></p>
+    </section>
+
+    <section class="q">
+      <h2>Which departments get more, and which get less?</h2>
+      <p class="answer" id="p27-dept-answer"></p>
+      <div class="ledger-wrap three"><table class="ledger" id="p27-dept"></table></div>
+      <p class="note">Departments sometimes trade responsibilities from one year to the next, so a drop in one line can show up as an increase in another. Building and Zoning Services shows no general fund spending in 2027. Each department's section of the budget book explains its changes.</p>
+    </section>
+
+    <section class="q">
+      <h2>Does it balance, and what about the years after?</h2>
+      <p class="answer" id="p27-bal"></p>
+      <div class="chart-frame"><svg class="chart" id="p27-forecast" viewBox="0 0 760 250" role="img"></svg></div>
+      <p class="note" id="p27-forecast-note"></p>
+    </section>
+
+    <section class="q">
+      <h2>Does the rainy-day fund reach its goal?</h2>
+      <p class="answer" id="p27-esf"></p>
+      <div class="chart-frame"><svg class="chart" id="p27-esf-chart" viewBox="0 0 760 260" role="img"></svg></div>
+      <p class="note" id="p27-esf-note"></p>
+    </section>
+
+    <section class="q">
+      <h2>How these numbers were checked</h2>
+      <p class="note">Every column was added up and compared to the totals the city prints, the way an auditor foots a schedule. Red tickmarks in the tables above mark the totals that tie.</p>
+      <ul class="ticks" id="p27-checks"></ul>
+    </section>
+  </main>
+
+  <!-- ===================== 2025 RESULTS ===================== -->
+  <main class="view" id="view-2025" hidden>
+    <div class="intro">
+      <h1>Where Columbus's money came from in 2025, and where it went</h1>
+      <p class="lede">The general fund pays for most everyday city services: police, fire, parks, courts, and the offices that run the city. Water, sewer, and power have their own funds and are not included here.</p>
+      <p class="status">Final results for the year ended December 31, 2025, from the city's year-end financial review.</p>
+    </div>
+
+    <section class="q">
+      <h2>Where the money came from</h2>
+      <p class="answer" id="r25-rev-answer"></p>
+      <div class="split" id="r25-split" role="img"></div>
+      <div class="split-legend" id="r25-split-legend"></div>
+      <div class="ledger-wrap"><table class="ledger" id="r25-rev"></table></div>
+      <p class="note">Columbus's income tax rate is 2.5%. By city code, 75% of collections go to the general fund and 25% to a separate fund for capital projects like roads and buildings. Most property tax must go to debt payments and police and fire pensions before any reaches the general fund.</p>
+    </section>
+
+    <section class="q">
+      <h2>Which departments spent it</h2>
+      <p class="answer" id="r25-dept-answer"></p>
+      <div class="ledger-wrap"><table class="ledger" id="r25-dept"></table></div>
+      <button class="more" type="button" id="r25-more" aria-expanded="false">Show all 18 departments</button>
+    </section>
+
+    <section class="q">
+      <h2>What it was spent on</h2>
+      <p class="answer" id="r25-obj-answer"></p>
+      <div class="ledger-wrap"><table class="ledger" id="r25-obj"></table></div>
+      <p class="note">Transfers to other funds are payments from the general fund into other city funds, for example to cover debt payments or programs accounted for separately.</p>
+    </section>
+
+    <section class="q">
+      <h2>Did the city spend more than it took in?</h2>
+      <p class="answer" id="r25-bal"></p>
+      <p class="note" id="r25-bal-detail"></p>
+    </section>
+
+    <section class="q">
+      <h2>How these numbers were checked</h2>
+      <ul class="ticks" id="r25-checks"></ul>
+    </section>
+  </main>
+
+  <section class="q" aria-labelledby="terms-h">
+    <h2 id="terms-h">Terms used here</h2>
+    <dl class="terms">
+      <dt>General fund</dt><dd>The city's main operating account for day-to-day services.</dd>
+      <dt>Budgetary basis</dt><dd>Counts money when it is spent or committed, which is how the city manages its budget. The audited annual report (ACFR) uses a different method, so its totals differ.</dd>
+      <dt>Encumbrance</dt><dd>Money set aside for something ordered but not yet paid for. If the order is cancelled, the money returns to the fund.</dd>
+      <dt>Projected</dt><dd>The city's estimate of where the current year will end, made before the year is over.</dd>
+      <dt>Rainy-day fund</dt><dd>The economic stabilization fund: savings kept for downturns and emergencies.</dd>
+      <dt>Tickmarks</dt><dd>An auditor's pencil marks showing how a figure was checked. <span class="tick" style="margin:0">F</span> footed: the column adds up to the printed total. <span class="tick" style="margin:0">✓</span> recomputed or agreed to another figure. <span class="tick" style="margin:0">?</span> open: a difference not yet explained.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    <p id="foot-sources"></p>
+    <p>Columbus Ledger is an independent explainer. It describes what public reports say and does not take positions on city policy or candidates. Every figure links back to a public document, so anyone can check it.</p>
+  </footer>
+</div>
+
+<script>
+const ALL = /*__DATA__*/null;
+const A = ALL.y2025, P = ALL.y2027;
+const $ = id => document.getElementById(id);
+
+const M = (n, d = 1) => {
+  const a = Math.abs(n), s = n < 0 ? "-" : "";
+  if (a >= 1e9) return s + "$" + (a / 1e9).toFixed(2) + " billion";
+  if (a >= 1e6) return s + "$" + (a / 1e6).toFixed(d) + " million";
+  return s + "$" + Math.round(a).toLocaleString();
+};
+const short = n => {
+  const a = Math.abs(n);
+  const v = a >= 1e9 ? "$" + (a / 1e9).toFixed(3) + "B" : a >= 1e6 ? "$" + (a / 1e6).toFixed(1) + "M" : a === 0 ? "$0" : "$" + Math.round(a / 1e3) + "K";
+  return n < 0 ? "(" + v + ")" : v;
+};
+const pct = (a, b) => { const p = 100 * a / b; return p > 0 && p < 0.05 ? "<0.1%" : p.toFixed(1) + "%"; };
+const chg = (a, b) => {
+  if (a === 0 && b === 0) return "";
+  if (a === 0) return "new";
+  const p = 100 * (b - a) / a;
+  return p < 0 ? "(" + Math.abs(p).toFixed(1) + "%)" : "+" + p.toFixed(1) + "%";
+};
+const TICK = '<span class="tick" title="Footed: column adds to the printed total">F</span>';
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+/* ---------- routing ---------- */
+function route() {
+  const is25 = location.hash === "#results-2025";
+  $("view-2025").hidden = !is25;
+  $("view-2027").hidden = is25;
+  $("nav-2025").toggleAttribute("aria-current", is25);
+  $("nav-2027").toggleAttribute("aria-current", !is25);
+  if (is25) $("nav-2025").setAttribute("aria-current", "page"); else $("nav-2027").setAttribute("aria-current", "page");
+  renderSources(is25);
+}
+window.addEventListener("hashchange", () => { route(); window.scrollTo(0, 0); });
+
+function renderSources(is25) {
+  $("foot-sources").innerHTML = is25
+    ? `Source: <a href="${A.source.url}">${esc(A.source.title)}</a>, ${esc(A.source.publisher)}, retrieved ${A.source.retrieved}. Rainy-day goal: <a href="${A.reserves.rainy_day_goal.source_url}">2026 budget, financial overview</a>.`
+    : `Sources: <a href="${P.source.url}">${esc(P.source.title)}</a> and <a href="${P.outlook_source.url}">${esc(P.outlook_source.title)}</a>, ${esc(P.source.publisher)}, retrieved ${P.source.retrieved}.`;
+}
+
+/* ---------- 2027 ---------- */
+const [S25, S26, S27] = P.spending_total;
+$("p27-lede").textContent = `Each November the mayor proposes a spending plan for the next year. This page lines up the 2027 general fund proposal against what the city actually spent in 2025 and what it expects to spend by the end of 2026.`;
+$("p27-status").textContent = P.status;
+
+$("p27-size").innerHTML = `The proposal would spend <b>${M(S27, 2)}</b> from the general fund in 2027, ${M(S27 - S26)} more than the city expects to spend in 2026, an increase of ${chg(S26, S27).replace("+", "")}.`;
+
+const col3 = (cells, cls = "") => cells.map((c, i) => `<td class="num${i === 2 ? " focus" : ""}">${c}</td>`).join("");
+$("p27-totals").innerHTML = `
+  <thead><tr><th></th>${P.columns.map(c => `<th class="num">${c}</th>`).join("")}<th class="num">Change</th></tr></thead>
+  <tbody>
+    <tr><td>Revenue for the year</td>${col3(P.revenue_total.map(short))}<td class="num chg">${chg(P.revenue_total[1], P.revenue_total[2])}</td></tr>
+    <tr><td>Other money available<br><span class="chg" style="font-size:.85em">carried-in cash, cancelled orders, transfers</span></td>${col3(P.resources_total.map((t, i) => short(t - P.revenue_total[i])))}<td class="num chg"></td></tr>
+    <tr class="sub"><td>Total available</td>${col3(P.resources_total.map(short))}<td class="num chg">${chg(P.resources_total[1], P.resources_total[2])}</td></tr>
+    <tr class="total"><td>Spending</td>${col3(P.spending_total.map(v => short(v) + TICK))}<td class="num chg">${chg(S26, S27)}</td></tr>
+  </tbody>`;
+
+const R = P.revenue;
+const inc = R[0];
+const inv = R.find(r => r.name === "Investment earnings");
+$("p27-rev-answer").innerHTML = `Income tax would bring in <b>${M(inc.values[2])}</b>, ${pct(inc.values[2], P.revenue_total[2])} of 2027 revenue and ${chg(inc.values[1], inc.values[2]).replace("+", "")} more than in 2026. Investment earnings are expected to fall by ${M(inv.values[1] - inv.values[2])}.`;
+let rows = "", lastGroup = "";
+R.forEach(r => {
+  if (r.group !== lastGroup) { rows += `<tr class="group"><td colspan="5">${r.group}</td></tr>`; lastGroup = r.group; }
+  rows += `<tr><td>${r.name}</td>${col3(r.values.map(short))}<td class="num chg">${chg(r.values[1], r.values[2])}</td></tr>`;
+});
+$("p27-rev").innerHTML = `
+  <thead><tr><th>Source</th>${P.columns.map(c => `<th class="num">${c}</th>`).join("")}<th class="num">Change</th></tr></thead>
+  <tbody>${rows}
+    <tr class="total"><td>Total revenue</td>${col3(P.revenue_total.map(v => short(v) + TICK))}<td class="num chg">${chg(P.revenue_total[1], P.revenue_total[2])}</td></tr>
+  </tbody>`;
+$("p27-rev-note").textContent = `The income tax figure is the City Auditor's official estimate, a 3.25% increase over the 2026 projection. The city's financial overview describes investment earnings as highly volatile.`;
+
+const D27 = [...P.departments].sort((a, b) => b.values[2] - a.values[2]);
+const ps = D27[0];
+const ups = D27.filter(d => d.values[2] > d.values[1]).length;
+$("p27-dept-answer").innerHTML = `Public Safety would receive <b>${M(ps.values[2])}</b>, ${pct(ps.values[2], S27)} of proposed spending and ${M(ps.values[2] - ps.values[1])} more than its 2026 projection. ${ups} of the ${D27.length} lines in this table go up from 2026; the rest go down.`;
+$("p27-dept").innerHTML = `
+  <thead><tr><th>Department</th>${P.columns.map(c => `<th class="num">${c}</th>`).join("")}<th class="num">Change</th></tr></thead>
+  <tbody>${D27.map(d => `<tr><td>${d.name}</td>${col3(d.values.map(short))}<td class="num chg">${chg(d.values[1], d.values[2])}</td></tr>`).join("")}
+    <tr class="total"><td>Total</td>${col3(P.spending_total.map(v => short(v) + TICK))}<td class="num chg">${chg(S26, S27)}</td></tr>
+  </tbody>`;
+
+const F = P.forecast;
+const carried = P.other_resources[1].values[2];
+$("p27-bal").innerHTML = `On paper, yes. The plan uses all ${M(P.resources_total[2], 2)} available, including ${M(carried)} left over from 2026, and ends 2027 with nothing extra. The city's own forecast then shows spending outrunning revenue by <b>${M(-F.gap[1])}</b> in 2028, with smaller gaps each year through 2036.`;
+$("p27-forecast-note").textContent = `${F.note} Forecast assumptions: ${F.assumptions.join("; ").toLowerCase()}.`;
+
+(function forecastChart() {
+  const svg = $("p27-forecast"), W = 760, H = 250, L = 56, Rr = 16, T = 30, B = 40;
+  const yrs = F.years.slice(1), gaps = F.gap.slice(1).map(g => -g);
+  const max = 35e6, bw = (W - L - Rr) / yrs.length;
+  const y = v => T + (v / max) * (H - T - B);
+  let s = `<line x1="${L}" x2="${W - Rr}" y1="${T}" y2="${T}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  s += `<text x="${L - 8}" y="${T + 4}" text-anchor="end">$0</text>`;
+  [10e6, 20e6, 30e6].forEach(v => { s += `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">($${v / 1e6}M)</text>`; });
+  yrs.forEach((yr, i) => {
+    const x = L + i * bw + bw * 0.18, w = bw * 0.64;
+    s += `<rect x="${x}" y="${T}" width="${w}" height="${y(gaps[i]) - T}" fill="var(--data)"/>`;
+    s += `<text x="${x + w / 2}" y="${y(gaps[i]) + 14}" text-anchor="middle" class="lbl">${(gaps[i] / 1e6).toFixed(1)}</text>`;
+    s += `<text x="${x + w / 2}" y="${H - 10}" text-anchor="middle">${yr}</text>`;
+  });
+  s += `<text x="${L}" y="16" text-anchor="start">Projected shortfall before cuts or new revenue, millions of dollars</text>`;
+  svg.innerHTML = s;
+  svg.setAttribute("aria-label", "Projected general fund shortfall by year, 2028 to 2036, from " + M(gaps[0]) + " down to " + M(gaps[gaps.length - 1]));
+})();
+
+const E = P.reserves, EH = E.esf_history;
+const esf27 = E.economic_stabilization_fund.values[2];
+$("p27-esf").innerHTML = `The city projects the fund will reach <b>${M(esf27)}</b> by the end of 2027, just past its goal of ${M(E.goal_current.amount)}. It has now set a new goal of ${M(E.goal_new.amount, 0)} by ${E.goal_new.by.replace("end of ", "the end of ")}.`;
+$("p27-esf-note").textContent = `The city made no deposits into the fund in 2025 or 2026; the fund grew from interest. The 2027 proposal deposits ${M(E.esf_deposit_2027, 2)}. 2026 and 2027 bars are projections.`;
+(function esfChart() {
+  const svg = $("p27-esf-chart"), W = 760, H = 260, L = 50, Rr = 96, T = 24, B = 34;
+  const max = 150000, n = EH.years.length, bw = (W - L - Rr) / n;
+  const y = v => H - B - (v / max) * (H - T - B);
+  let s = "";
+  [0, 50000, 100000, 150000].forEach(v => { s += `<line x1="${L}" x2="${W - Rr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--rule)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end">$${v / 1000}M</text>`; });
+  EH.years.forEach((yr, i) => {
+    const v = EH.balance_thousands[i], x = L + i * bw + bw * 0.15, w = bw * 0.7, proj = yr >= 2026;
+    s += `<rect x="${x}" y="${y(v)}" width="${w}" height="${y(0) - y(v)}" fill="${proj ? "var(--data-2)" : "var(--data)"}"/>`;
+    if (i % 2 === 1 || i === n - 1) s += `<text x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${yr}</text>`;
+  });
+  const g1 = E.goal_current.amount / 1000, g2 = E.goal_new.amount / 1000;
+  s += `<line x1="${L}" x2="${W - Rr}" y1="${y(g1)}" y2="${y(g1)}" stroke="var(--pencil)" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+  s += `<text x="${W - Rr + 6}" y="${y(g1) + 5}" class="pencil">2027 goal</text>`;
+  s += `<line x1="${L}" x2="${W - Rr}" y1="${y(g2)}" y2="${y(g2)}" stroke="var(--pencil)" stroke-width="1" stroke-dasharray="2 4"/>`;
+  s += `<text x="${W - Rr + 6}" y="${y(g2) + 5}" class="pencil">2032 goal</text>`;
+  svg.innerHTML = s;
+  svg.setAttribute("aria-label", `Rainy-day fund year-end balance, 2014 to 2027, rising from $64.1 million to a projected ${M(esf27)}`);
+})();
+
+const ticks = items => items.map(([m, t]) => `<li><span class="mark" aria-hidden="true">${m}</span><span>${t}</span></li>`).join("");
+$("p27-checks").innerHTML = ticks([
+  ["F", "In all three years, revenue lines add up to total revenue, and department lines add up to total spending (2025 is off by $3 from rounding)."],
+  ["F", "Revenue plus other available money equals total resources in every year."],
+  ["✓", `What's left at the end of 2026 (${short(P.resources_total[1] - S26)}) equals the balance carried into 2027.`],
+  ["✓", "Each year in the 10-year forecast: projected revenue minus projected spending equals the printed shortfall."],
+  ["?", "Two 2025 figures in the budget book differ from the year-end review: beginning cash by $300,000 and cancelled orders by $106,687. This page uses each document's own numbers and lists the difference here."],
+  ["?", "The City Auditor's letter totals 2027 resources at $1,000,000 less than the budget summary. The difference matches the transfers-in line, which the Auditor's statement leaves out."]
+]);
+
+/* ---------- 2025 ---------- */
+const rev = [...A.revenue].sort((a, b) => b.amount - a.amount);
+const RT = A.resources.revenue_total, ST = A.expenditures_total;
+$("r25-rev-answer").innerHTML = `<b>${pct(rev[0].amount, RT)}</b> of the year's ${M(RT, 2)} in revenue came from one source: the city income tax.`;
+const groups = [["Income tax", rev[0].amount, "var(--data)"], ["Other taxes", A.revenue.filter(r => r.group === "Taxes" && r.name !== "Income tax").reduce((s, r) => s + r.amount, 0), "var(--data-2)"], ["State and shared", A.revenue.filter(r => r.group === "Shared revenue").reduce((s, r) => s + r.amount, 0), "var(--rule-strong)"], ["Fees, interest, and other", A.revenue.filter(r => r.group === "Other").reduce((s, r) => s + r.amount, 0), "var(--data-3)"]];
+$("r25-split").innerHTML = groups.map(([n, v, c]) => `<div style="flex-grow:${v};background:${c}" title="${n}: ${pct(v, RT)}"></div>`).join("");
+$("r25-split").setAttribute("aria-label", groups.map(([n, v]) => `${n} ${pct(v, RT)}`).join(", "));
+$("r25-split-legend").innerHTML = groups.map(([n, v, c]) => `<span style="--c:${c}">${n}, ${pct(v, RT)}</span>`).join("");
+const tbl2 = (rows, total, head) => `
+  <thead><tr><th>${head}</th><th class="num">2025 actual</th><th class="num">Share</th></tr></thead>
+  <tbody>${rows.map(r => `<tr><td>${r.name}</td><td class="num">${short(r.amount)}</td><td class="num chg">${pct(r.amount, total)}</td></tr>`).join("")}
+  <tr class="total"><td>Total</td><td class="num">${short(total)}${TICK}</td><td class="num chg">100%</td></tr></tbody>`;
+$("r25-rev").innerHTML = tbl2(rev, RT, "Source");
+
+const dps = A.expenditures_by_department;
+$("r25-dept-answer").innerHTML = `Public Safety accounted for <b>${pct(dps[0].amount, ST)}</b> of general fund spending, ${M(dps[0].amount)}. The other 17 departments shared the remaining ${M(ST - dps[0].amount)}.`;
+let all25 = false;
+const drawD = () => { $("r25-dept").innerHTML = tbl2(all25 ? dps : dps.slice(0, 8), ST, "Department"); };
+drawD();
+$("r25-more").addEventListener("click", e => {
+  all25 = !all25; drawD();
+  e.currentTarget.textContent = all25 ? "Show top 8 only" : "Show all 18 departments";
+  e.currentTarget.setAttribute("aria-expanded", String(all25));
+});
+
+$("r25-obj-answer").innerHTML = `About three of every four dollars, <b>${pct(A.expenditures_by_object[0].amount, ST)}</b>, paid for city employees: salaries, health insurance, and pension contributions.`;
+$("r25-obj").innerHTML = tbl2(A.expenditures_by_object, ST, "Type of spending");
+
+const r = A.resources;
+$("r25-bal").innerHTML = `Yes, by <b>${M(ST - RT)}</b>. The city spent ${M(ST, 2)} against ${M(RT, 2)} in revenue.`;
+$("r25-bal-detail").textContent = `That isn't a deficit. The city started the year with ${M(r.beginning_unencumbered_cash)} in unspent cash, got back ${M(r.encumbrance_cancellations)} from cancelled orders, and moved in ${M(r.transfers_in)} from other funds, including the full ${M(A.reserves.basic_city_services_fund.spent_2025)} balance of its 2013 Basic City Services Fund, which is now empty. In total it had ${M(r.total, 2)} available and finished the year with ${M(A.ending_fund_balance)} left over.`;
+
+$("r25-checks").innerHTML = ticks([
+  ["F", "Revenue lines add up to the reported total (within $1 rounding)."],
+  ["F", "Department spending adds up to the reported total (within $3 rounding)."],
+  ["F", "Spending by type adds up to the same total exactly."],
+  ["✓", `Rainy-day fund: ${M(A.reserves.economic_stabilization_fund.beginning)} at the start plus ${M(A.reserves.economic_stabilization_fund.additions)} added equals ${M(A.reserves.economic_stabilization_fund.ending)} at the end.`],
+  ["?", `Money available minus spending comes to $${(r.total - ST).toLocaleString()}, which is $${(r.total - ST - A.ending_fund_balance).toLocaleString()} more than the reported year-end balance. The summary tables don't explain the difference yet.`]
+]);
+
+route();
+</script>
+</body>
+</html>
